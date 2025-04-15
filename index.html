@@ -9,7 +9,7 @@
     body {
       font-family: Arial, sans-serif;
       background: linear-gradient(to bottom right, #e6fff2, #ccf2e9), url('walkcollage.png') repeat;
-      background-size: 150px auto;
+      background-size: 100px auto;
       margin: 0;
       padding: 0;
       display: flex;
@@ -21,10 +21,11 @@
 
     .header-slider {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       gap: 10px;
-      padding: 10px 0;
+      padding: 10px;
       animation: fadeIn 2s ease-in-out;
+      margin-left: 20px;
     }
 
     .header-slider img {
@@ -81,8 +82,8 @@
       100% { opacity: 1; transform: scale(1); }
     }
 
-    #fb-login-btn {
-      background-color: #4267B2;
+    #login-dropdown-btn {
+      background-color: #007f5f;
       color: white;
       border: none;
       padding: 12px 20px;
@@ -92,7 +93,26 @@
       transition: background-color 0.3s;
     }
 
-    #fb-login-btn:hover {
+    #login-dropdown-btn:hover {
+      background-color: #005f47;
+    }
+
+    #login-options {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .login-option {
+      background-color: #4267B2;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .login-option:hover {
       background-color: #365899;
     }
 
@@ -171,7 +191,10 @@
   <div class="container">
     <h1>Walk College</h1>
     <p id="loginText">Login to connect with others and enjoy walking together!</p>
-    <button id="fb-login-btn" onclick="loginWithFacebook()">Login with Facebook</button>
+    <button id="login-dropdown-btn" onclick="toggleLoginOptions()">Login</button>
+    <div id="login-options">
+      <button class="login-option" onclick="loginWithFacebook()">Facebook</button>
+    </div>
     <br />
     <select onchange="changeLanguage(this.value)">
       <option value="en">English</option>
@@ -192,38 +215,20 @@
   <div id="privacyModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal('privacyModal')">&times;</span>
-      <h2>Privacy Policy – Walk College</h2>
-      <p>Walk College uses your personal data solely to enable Facebook login and to match users based on shared hobbies and location.</p>
-      <ul>
-        <li>Name (from your Facebook profile)</li>
-        <li>Profile picture</li>
-        <li>Selected hobbies</li>
-        <li>Device location (used to match users nearby)</li>
-      </ul>
-      <p>We do not share or sell your data to any third parties. All user data is stored securely using Firebase (Google Cloud services).</p>
-      <p>We do not respond to individual data requests. To stop using the app, simply uninstall it. Inactive user data is automatically cleaned up.</p>
-      <p><strong>Data Deletion Instructions:</strong> If you want your data deleted immediately, simply uninstall the app. Inactive accounts and their data are removed automatically after 90 days.</p>
+      <h2>Privacy Policy</h2>
+      <p>This app does not collect, store or share any personal information from users.</p>
+      <p>No accounts are required and all data remains on the user's device.</p>
+      <p>If you have questions, contact us at: <strong>wwalkcollege@gmail.com</strong></p>
     </div>
   </div>
 
   <div id="termsModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal('termsModal')">&times;</span>
-      <h2>✅ Terms of Use – Walk College</h2>
-      <p>Welcome to Walk College! By using this app, you agree to the following terms and conditions:</p>
-      <ol>
-        <li><strong>Purpose:</strong> Walk College is a mobile app that connects people with shared hobbies who are located near each other. Its goal is to help users find walking buddies and social activity partners based on mutual interests and location.</li>
-        <li><strong>Facebook Login & Account:</strong> The app uses Facebook login to authenticate users. You are responsible for providing accurate information via your Facebook account. Fake or impersonated accounts may result in a ban.</li>
-        <li><strong>Location & Hobby Matching:</strong> The app uses your device’s location and your selected hobbies to match you with nearby users who share similar interests. You control which hobbies to share. Location is used only for proximity-based suggestions.</li>
-        <li><strong>Acceptable Use:</strong> You agree to use the app respectfully and not to:
-          <ul>
-            <li>Harass or insult other users</li>
-            <li>Upload offensive content</li>
-            <li>Misuse the app in any way</li>
-          </ul>
-          Any abusive behavior may result in immediate suspension or removal of your account.
-        </li>
-      </ol>
+      <h2>Terms of Use</h2>
+      <p>This app is provided "as is" without any guarantees.</p>
+      <p>The creator is not responsible for how users use the app or for any consequences of its use.</p>
+      <p>Use of this app is entirely at your own risk.</p>
     </div>
   </div>
 
@@ -246,6 +251,11 @@
           alert("Login was cancelled or failed.");
         }
       }, { scope: 'public_profile,email' });
+    }
+
+    function toggleLoginOptions() {
+      const options = document.getElementById("login-options");
+      options.style.display = options.style.display === "block" ? "none" : "block";
     }
 
     function openModal(id) {
