@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | Walk College</title>
-  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,11 +22,10 @@
     .container {
       text-align: center;
       background: white;
-      padding: 30px;
+      padding: 40px;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       z-index: 1;
-      position: relative;
     }
 
     img.logo {
@@ -57,24 +55,25 @@
 
     .slideshow {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
+      bottom: 120px;
+      width: 90%;
+      max-width: 900px;
+      height: auto;
       display: flex;
       justify-content: center;
-      align-items: center;
+      gap: 20px;
+      z-index: 0;
     }
 
     .slideshow img {
-      position: absolute;
-      max-width: 70vw;
-      max-height: 70vh;
-      object-fit: contain;
+      width: 30%;
+      height: auto;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       opacity: 0;
-      border-radius: 8px;
-      animation: fade 18s infinite;
+      animation: fade 30s infinite;
     }
 
     .slideshow img:nth-child(1) {
@@ -82,11 +81,11 @@
     }
 
     .slideshow img:nth-child(2) {
-      animation-delay: 6s;
+      animation-delay: 10s;
     }
 
     .slideshow img:nth-child(3) {
-      animation-delay: 12s;
+      animation-delay: 20s;
     }
 
     @keyframes fade {
@@ -107,43 +106,51 @@
       }
     }
 
-    .footer-buttons {
-      margin-top: 40px;
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
     }
 
-    .footer-buttons button {
+    footer button {
       background-color: #007f5f;
       color: white;
       border: none;
-      padding: 10px 16px;
+      padding: 10px 15px;
       margin: 5px;
+      border-radius: 5px;
       font-size: 0.9em;
-      border-radius: 6px;
       cursor: pointer;
+    }
+
+    footer button:hover {
+      background-color: #005f47;
     }
   </style>
 </head>
 
 <body>
-  <div class="slideshow">
-    <img src="walk_college_hero.png" alt="Hero walk">
-    <img src="peoplewalk.png" alt="People walking">
-    <img src="forrest.png" alt="Forest walk">
-  </div>
-
   <div class="container">
     <img class="logo" src="walkcollage.png" alt="Walk College Logo">
     <h1>Walk College</h1>
     <p>Login to connect with others and enjoy walking together!</p>
     <button id="fb-login-btn" onclick="loginWithFacebook()">Login with Facebook</button>
-
-    <div class="footer-buttons">
-      <button onclick="alert('Privacy Policy\n\nThis app does not collect any personal data. All data stays on your device.')">Privacy Policy</button>
-      <button onclick="alert('Terms of Use\n\nUse this app at your own risk. The app is provided as-is.')">Terms of Use</button>
-    </div>
   </div>
 
-  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <div class="slideshow">
+    <img src="peoplewalk.png" alt="People walking 1">
+    <img src="forrest.png" alt="Forest walk">
+    <img src="walk_college_hero.png" alt="Hero walk">
+  </div>
+
+  <footer>
+    <button onclick="alert('Privacy Policy: This app does not collect any personal data.')">Privacy Policy</button>
+    <button onclick="alert('Terms of Use: Use this app at your own risk.')">Terms of Use</button>
+  </footer>
+
+  <script async defer crossorigin="anonymous"
+    src="https://connect.facebook.net/en_US/sdk.js"></script>
   <script>
     window.fbAsyncInit = function () {
       FB.init({
@@ -157,7 +164,6 @@
     function loginWithFacebook() {
       FB.login(function (response) {
         if (response.authResponse) {
-          // tutaj przekierowanie po zalogowaniu
           window.location.href = "dashboard.html";
         } else {
           alert("Login was cancelled or failed.");
