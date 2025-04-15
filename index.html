@@ -6,6 +6,9 @@
   <title>Walk College</title>
   <link rel="icon" href="favicon.png" type="image/png">
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -24,12 +27,14 @@
     .hero {
       position: relative;
       width: 100%;
+      overflow: hidden;
     }
-    width: 70%;
-      max-height: 500px;
+    .hero img {
+      width: 100%;
+      max-height: 450px;
       object-fit: cover;
-      height: auto;
       display: block;
+      animation: fadeIn 1.5s ease-in-out;
     }
     .overlay {
       position: absolute;
@@ -44,9 +49,10 @@
       text-align: center;
       color: white;
       background: rgba(0, 0, 0, 0.4);
+      animation: fadeIn 2s ease-in-out;
     }
     .overlay h1 {
-      font-size: 2rem;
+      font-size: 1.8rem;
       margin-bottom: 1rem;
     }
     .overlay button {
@@ -61,15 +67,20 @@
     .side-images {
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
       padding: 2rem 1rem;
       max-width: 1000px;
       margin: 0 auto;
+      gap: 1rem;
+      animation: fadeIn 1.5s ease-in-out;
     }
     .side-images img {
       width: 30%;
       height: auto;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      flex-grow: 1;
+      min-width: 200px;
     }
     footer {
       position: fixed;
@@ -102,18 +113,36 @@
       overflow-y: auto;
       border-radius: 10px;
     }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @media (max-width: 768px) {
+      .overlay h1 {
+        font-size: 1.2rem;
+      }
+      .overlay button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+      }
+      .side-images img {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
+  <div style="width: 100%; text-align: center; padding: 1rem 0; font-size: 1.2rem; font-weight: 600; background-color: #ffffff; border-bottom: 1px solid #ddd;">
+    Connecting people through shared walks and hobbies
+  </div>
   <div class="top-bar">
     <img src="favicon.png" alt="Logo">
   </div>
 
   <div class="hero">
-    <img src="walk_college_hero.png" alt="Hero Image" style="margin: 0 auto; display: block;">
+    <img src="walk_college_hero.png" alt="Hero Image">
     <div class="overlay">
-      <h1 id="slogan">Connecting people through shared walks and hobbies</h1>
-      <button onclick="showLogin()">Start Walking</button>
+            <button onclick="showLogin()">Start Walking</button>
       <div id="fb-login" style="margin-top: 1rem; display:none; color:white;">
         <p>Redirecting to login...</p>
       </div>
