@@ -1,80 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Walk College</title>
-  <link rel="icon" href="favicon.png" />
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #e6f5ec;
+      background-color: #e6fff2;
       margin: 0;
       padding: 0;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      min-height: 100vh;
     }
+
     header {
-      padding: 30px 10px 10px;
+      text-align: center;
+      padding: 30px 20px 10px;
+      animation: fadeIn 1.2s ease-in-out;
     }
+
     header img {
-      width: 80px;
-      margin-bottom: 10px;
+      max-width: 130px;
+      height: auto;
     }
+
     h1 {
-      color: #25794b;
-      font-size: 32px;
+      font-size: 2em;
+      color: #007f5f;
+      margin: 10px 0;
     }
+
     p {
-      font-size: 16px;
-      color: #333;
+      color: #444;
+      font-size: 1.1em;
+      padding: 0 10px;
     }
-    .nav a {
-      display: inline-block;
-      text-decoration: none;
-      color: white;
-      background-color: #25794b;
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    button {
       padding: 10px 20px;
-      margin: 10px;
+      border: none;
+      background-color: #007f5f;
+      color: white;
+      font-size: 1em;
       border-radius: 8px;
-      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-    .nav a:hover {
-      background-color: #1d5e3b;
+
+    button:hover {
+      background-color: #005f47;
     }
+
+    select {
+      margin-top: 10px;
+      padding: 6px;
+      font-size: 1em;
+      border-radius: 6px;
+    }
+
     .content img {
-      width: 80%;
-      max-width: 600px;
-      margin: 20px 0;
-      border-radius: 12px;
+      width: 90%;
+      max-width: 900px;
+      margin-top: 30px;
+      border-radius: 10px;
+      animation: zoomIn 1.2s ease;
     }
-    .section {
-      background: #fff;
-      margin: 20px auto;
+
+    footer {
+      margin-top: auto;
       padding: 20px;
+      text-align: center;
+      color: #777;
+      font-size: 0.9em;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
       width: 90%;
       max-width: 600px;
       border-radius: 10px;
-      text-align: left;
     }
-    .hidden {
-      display: none;
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
     }
-    footer {
-      margin-top: 40px;
-      padding: 20px;
-      background-color: #d1eadc;
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+      }
+
+      p {
+        font-size: 1em;
+      }
+
+      button {
+        font-size: 0.9em;
+        padding: 8px 16px;
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 15px;
+      }
     }
   </style>
 </head>
-<body>
 
+<body>
   <header>
     <img src="walkcollage.png" alt="Walk College Logo" />
     <h1>Walk College</h1>
-    <p>Connecting people through shared walks and hobbies.</p>
-    <div class="nav">
-      <a href="#" onclick="showSection('privacy')">Privacy Policy</a>
-      <a href="#" onclick="showSection('terms')">Terms of Use</a>
+    <p id="tagline">Connecting people through shared walks and hobbies.</p>
+    <select onchange="changeLanguage(this.value)">
+      <option value="en">English</option>
+      <option value="pl">Polski</option>
+    </select>
+    <div class="buttons">
+      <button onclick="openModal('privacyModal')" id="privacyBtn">Privacy Policy</button>
+      <button onclick="openModal('termsModal')" id="termsBtn">Terms of Use</button>
     </div>
   </header>
 
@@ -82,18 +183,24 @@
     <img src="walk_college_hero.png" alt="Happy people walking" />
   </div>
 
-  <div id="privacy" class="section hidden">
-    <h2>Privacy Policy</h2>
-    <p>This app does not collect, store or share any personal information from users.</p>
-    <p>No accounts are required and all data remains on the user's device.</p>
-    <p>If you have questions, contact us at: <strong>wwalkcollege@gmail.com</strong></p>
+  <div id="privacyModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('privacyModal')">&times;</span>
+      <h2 id="privacyTitle">Privacy Policy</h2>
+      <p id="privacy1">This app does not collect, store or share any personal information from users.</p>
+      <p id="privacy2">No accounts are required and all data remains on the user's device.</p>
+      <p id="privacy3">If you have questions, contact us at: <strong>wwalkcollege@gmail.com</strong></p>
+    </div>
   </div>
 
-  <div id="terms" class="section hidden">
-    <h2>Terms of Use</h2>
-    <p>This app is provided "as is" without any guarantees.</p>
-    <p>The creator is not responsible for how users use the app or for any consequences of its use.</p>
-    <p>Use of this app is entirely at your own risk.</p>
+  <div id="termsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('termsModal')">&times;</span>
+      <h2 id="termsTitle">Terms of Use</h2>
+      <p id="terms1">This app is provided "as is" without any guarantees.</p>
+      <p id="terms2">The creator is not responsible for how users use the app or for any consequences of its use.</p>
+      <p id="terms3">Use of this app is entirely at your own risk.</p>
+    </div>
   </div>
 
   <footer>
@@ -101,12 +208,58 @@
   </footer>
 
   <script>
-    function showSection(id) {
-      document.getElementById("privacy").classList.add("hidden");
-      document.getElementById("terms").classList.add("hidden");
-      document.getElementById(id).classList.remove("hidden");
+    function openModal(id) {
+      document.getElementById(id).style.display = "block";
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    window.onclick = function (event) {
+      const modals = document.getElementsByClassName("modal");
+      for (let modal of modals) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+    };
+
+    function changeLanguage(lang) {
+      const text = {
+        en: {
+          tagline: "Connecting people through shared walks and hobbies.",
+          privacyBtn: "Privacy Policy",
+          termsBtn: "Terms of Use",
+          privacyTitle: "Privacy Policy",
+          privacy1: "This app does not collect, store or share any personal information from users.",
+          privacy2: "No accounts are required and all data remains on the user's device.",
+          privacy3: "If you have questions, contact us at: <strong>wwalkcollege@gmail.com</strong>",
+          termsTitle: "Terms of Use",
+          terms1: "This app is provided \"as is\" without any guarantees.",
+          terms2: "The creator is not responsible for how users use the app or for any consequences of its use.",
+          terms3: "Use of this app is entirely at your own risk."
+        },
+        pl: {
+          tagline: "Łączenie ludzi przez wspólne spacery i hobby.",
+          privacyBtn: "Polityka prywatności",
+          termsBtn: "Regulamin",
+          privacyTitle: "Polityka prywatności",
+          privacy1: "Aplikacja nie gromadzi, nie przechowuje ani nie udostępnia danych osobowych użytkowników.",
+          privacy2: "Konta nie są wymagane, a dane pozostają na urządzeniu użytkownika.",
+          privacy3: "W razie pytań napisz do nas: <strong>wwalkcollege@gmail.com</strong>",
+          termsTitle: "Regulamin",
+          terms1: "Aplikacja jest dostarczana w stanie \"takim, jakim jest\" bez żadnych gwarancji.",
+          terms2: "Twórca nie ponosi odpowiedzialności za sposób korzystania z aplikacji ani za jego skutki.",
+          terms3: "Używasz aplikacji na własne ryzyko."
+        }
+      };
+
+      for (const id in text[lang]) {
+        document.getElementById(id).innerHTML = text[lang][id];
+      }
     }
   </script>
-
 </body>
+
 </html>
