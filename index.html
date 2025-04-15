@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | Walk College</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -22,14 +23,15 @@
     .container {
       text-align: center;
       background: white;
-      padding: 40px;
+      padding: 30px;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       z-index: 1;
+      position: relative;
     }
 
     img.logo {
-      width: 100px;
+      width: 80px;
       margin-bottom: 20px;
     }
 
@@ -60,16 +62,19 @@
       width: 100%;
       height: 100%;
       z-index: 0;
-      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .slideshow img {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 70vw;
+      max-height: 70vh;
+      object-fit: contain;
       opacity: 0;
-      animation: fade 30s infinite;
+      border-radius: 8px;
+      animation: fade 18s infinite;
     }
 
     .slideshow img:nth-child(1) {
@@ -77,11 +82,11 @@
     }
 
     .slideshow img:nth-child(2) {
-      animation-delay: 10s;
+      animation-delay: 6s;
     }
 
     .slideshow img:nth-child(3) {
-      animation-delay: 20s;
+      animation-delay: 12s;
     }
 
     @keyframes fade {
@@ -101,14 +106,29 @@
         opacity: 0;
       }
     }
+
+    .footer-buttons {
+      margin-top: 40px;
+    }
+
+    .footer-buttons button {
+      background-color: #007f5f;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      margin: 5px;
+      font-size: 0.9em;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
   <div class="slideshow">
-    <img src="peoplewalk.png" alt="People walking 1">
-    <img src="forrest.png" alt="Forest walk">
     <img src="walk_college_hero.png" alt="Hero walk">
+    <img src="peoplewalk.png" alt="People walking">
+    <img src="forrest.png" alt="Forest walk">
   </div>
 
   <div class="container">
@@ -116,14 +136,18 @@
     <h1>Walk College</h1>
     <p>Login to connect with others and enjoy walking together!</p>
     <button id="fb-login-btn" onclick="loginWithFacebook()">Login with Facebook</button>
+
+    <div class="footer-buttons">
+      <button onclick="alert('Privacy Policy\n\nThis app does not collect any personal data. All data stays on your device.')">Privacy Policy</button>
+      <button onclick="alert('Terms of Use\n\nUse this app at your own risk. The app is provided as-is.')">Terms of Use</button>
+    </div>
   </div>
 
-  <script async defer crossorigin="anonymous"
-    src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   <script>
     window.fbAsyncInit = function () {
       FB.init({
-        appId: '1226796702228224', // Facebook App ID inserted here
+        appId: '1226796702228224',
         cookie: true,
         xfbml: true,
         version: 'v18.0'
@@ -133,7 +157,8 @@
     function loginWithFacebook() {
       FB.login(function (response) {
         if (response.authResponse) {
-          window.location.href = "facebook-login-success.html";
+          // tutaj przekierowanie po zalogowaniu
+          window.location.href = "dashboard.html";
         } else {
           alert("Login was cancelled or failed.");
         }
