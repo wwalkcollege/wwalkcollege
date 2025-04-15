@@ -1,113 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Walk College - Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Walk College</title>
   <link rel="icon" href="favicon.png" type="image/png">
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSy8kZmnE07BraGJxWg22dRX40Lx6uYWGhDM",
+      authDomain: "walk-college.firebaseapp.com",
+      projectId: "walk-college",
+      storageBucket: "walk-college.appspot.com",
+      messagingSenderId: "741258557530",
+      appId: "1:741258557530:web:0533ae7b2645da71394063",
+      measurementId: "G-MQ5692KCJP"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '1226796702228224',
+        cookie: true,
+        xfbml: true,
+        version: 'v19.0'
+      });
+    };
+
+    window.showLogin = function () {
+      FB.login(async function (response) {
+        if (response.authResponse) {
+          FB.api('/me', { fields: 'name,picture' }, async function (userData) {
+            try {
+              await setDoc(doc(db, "users", response.authResponse.userID), {
+                name: userData.name,
+                picture: userData.picture.data.url,
+                hobbies: ["Forest walks"] // placeholder, you can let users edit later
+              });
+              window.location.href = 'dashboard.html';
+            } catch (e) {
+              alert('Failed to save user data');
+              console.error(e);
+            }
+          });
+        } else {
+          alert('Facebook login failed.');
+        }
+      }, { scope: 'public_profile' });
+    };
+
+    window.logout = function () {
+      FB.logout(function (response) {
+        window.location.href = 'index.html';
+      });
+    };
+
+    async function loadUsers() {
+      const container = document.getElementById("user-list");
+      const snapshot = await getDocs(collection(db, "users"));
+      snapshot.forEach(doc => {
+        const user = doc.data();
+        const div = document.createElement("div");
+        div.style = "background:white; padding:1rem; border-radius:8px; margin-bottom:1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05);";
+        div.innerHTML = `
+          <img src="${user.picture}" alt="${user.name}" style="width:40px; height:40px; border-radius:50%; vertical-align:middle; margin-right:10px;">
+          <strong>${user.name}</strong><br><span style="margin-left:50px">Hobbies: ${user.hobbies?.join(", ") || "Unknown"}</span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', loadUsers);
+  </script>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f3f6f5;
-      color: #333;
+      background-color: #f8f9fa;
+      color: #2c3e50;
     }
-    header {
-      background-color: #007f5f;
-      color: white;
-      padding: 1rem 2rem;
+    .top-bar {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
+      padding: 10px 20px;
+      background-color: #006f45;
+      color: white;
     }
-    header img {
-      height: 40px;
-    }
-    header h1 {
-      font-size: 1.5rem;
-      margin: 0;
-    }
-    .content {
-      padding: 2rem;
-    }
-    .user-card {
+    .top-bar img { width: 40px; height: 40px; }
+    .logout-btn {
       background: white;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .user-card img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .user-card h3 {
-      margin: 0 0 0.2rem;
-    }
-    .user-card p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: #555;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      color: #aaa;
-      font-size: 0.8rem;
+      color: #006f45;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <header>
+  <div class="top-bar">
     <img src="favicon.png" alt="Logo">
-    <h1>Welcome to Walk College</h1>
-  </header>
-
-  <div class="content" id="matchList">
-    <h2>Suggested walking buddies near you</h2>
-    <!-- User cards will appear here -->
+    <div>Welcome to Walk College</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
-
-  <footer>&copy; 2025 Walk College</footer>
-
-  <script>
-    const sampleUsers = [
-      {
-        name: "Emma",
-        photo: "https://randomuser.me/api/portraits/women/65.jpg",
-        hobbies: ["Forest walks", "Photography"]
-      },
-      {
-        name: "Lucas",
-        photo: "https://randomuser.me/api/portraits/men/66.jpg",
-        hobbies: ["Nature", "Running"]
-      },
-      {
-        name: "Sara",
-        photo: "https://randomuser.me/api/portraits/women/45.jpg",
-        hobbies: ["Hiking", "Picnics"]
-      }
-    ];
-
-    const container = document.getElementById("matchList");
-    sampleUsers.forEach(user => {
-      const card = document.createElement("div");
-      card.className = "user-card";
-      card.innerHTML = `
-        <img src="${user.photo}" alt="${user.name}">
-        <div>
-          <h3>${user.name}</h3>
-          <p>Hobbies: ${user.hobbies.join(", ")}</p>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  </script>
+  <main style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <h2>Suggested walking buddies near you</h2>
+    <div id="user-list"></div>
+  </main>
+  <footer style="text-align:center; padding:1rem; font-size:0.85rem; color:#aaa;">
+    © 2025 Walk College
+  </footer>
 </body>
 </html>
-
