@@ -6,7 +6,25 @@
   <title>Walk College</title>
   <link rel="icon" href="favicon.png" type="image/png">
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDocs, collection, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSy8kZmnE07BraGJxWg22dRX40Lx6uYWGhDM",
+      authDomain: "walk-college.firebaseapp.com",
+      projectId: "walk-college",
+      storageBucket: "walk-college.appspot.com",
+      messagingSenderId: "741258557530",
+      appId: "1:741258557530:web:0533ae7b2645da71394063",
+      measurementId: "G-MQ5692KCJP"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+
     window.fbAsyncInit = function () {
       FB.init({
         appId: '1226796702228224',
@@ -16,130 +34,138 @@
       });
     };
 
-    function showLogin() {
-      FB.login(function (response) {
+    window.showLogin = function () {
+      FB.login(async function (response) {
         if (response.authResponse) {
-          FB.api('/me', { fields: 'name,email,picture' }, function (userData) {
-            window.location.href = 'dashboard.html';
+          FB.api('/me', { fields: 'name,picture' }, async function (userData) {
+            try {
+              await setDoc(doc(db, "users", response.authResponse.userID), {
+                name: userData.name,
+                picture: userData.picture.data.url,
+                hobbies: ["Forest walks"]
+              });
+              sessionStorage.setItem('userID', response.authResponse.userID);
+              window.location.href = 'dashboard.html';
+            } catch (e) {
+              alert('Failed to save user data');
+              console.error(e);
+            }
           });
         } else {
           alert('Facebook login failed.');
         }
-      }, { scope: 'public_profile,email' });
-    }
-  </script>
-
-  <!-- Firebase config -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBx2ImEO7BraGJxWg22dRX40Lx6uYWGhDM",
-      authDomain: "walk-college.firebaseapp.com",
-      projectId: "walk-college",
-      storageBucket: "walk-college.appspot.com",
-      messagingSenderId: "741258557530",
-      appId: "1:741258557530:web:0533ee7b2645da71394063",
-      measurementId: "G-MQ5692CKLP"
+      }, { scope: 'public_profile' });
     };
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
+    window.loadUsers = async function () {
+      const container = document.getElementById("user-list");
+      const snapshot = await getDocs(collection(db, "users"));
+      const userID = sessionStorage.getItem("userID");
+
+      const currentUserDoc = await getDoc(doc(db, "users", userID));
+      const currentUser = currentUserDoc.data();
+      const currentHobbies = currentUser?.hobbies || [];
+
+      snapshot.forEach(docSnap => {
+        const user = docSnap.data();
+        if (docSnap.id !== userID && user.hobbies?.some(hobby => currentHobbies.includes(hobby))) {
+          const div = document.createElement("div");
+          div.style = "background:white; padding:1rem; border-radius:8px; margin-bottom:1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05);";
+          div.innerHTML = `
+            <img src="${user.picture}" alt="${user.name}" style="width:40px; height:40px; border-radius:50%; vertical-align:middle; margin-right:10px;">
+            <strong>${user.name}</strong><br><span style="margin-left:50px">Hobbies: ${user.hobbies?.join(", ") || "Unknown"}</span>
+          `;
+          container.appendChild(div);
+        }
+      });
+    };
+
+    window.updateHobbies = async function () {
+      const userID = sessionStorage.getItem("userID");
+      const hobbiesInput = document.getElementById("hobbies").value.split(",").map(h => h.trim());
+      await updateDoc(doc(db, "users", userID), { hobbies: hobbiesInput });
+      alert("Hobbies updated successfully!");
+      location.reload();
+    }
+
+    window.addEventListener('DOMContentLoaded', loadUsers);
   </script>
-
+  <script>
+    function logout() {
+      FB.logout(function (response) {
+        sessionStorage.clear();
+        window.location.href = 'index.html';
+      });
+    }
+  </script>
   <style>
-    /* Wszystko jak poprzednio (twój styl jest ok) */
-    /* ... pominięto dla czytelności ... */
-
-    .language-select {
-      margin-top: 10px;
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      color: #2c3e50;
+    }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background-color: #006f45;
+      color: white;
+    }
+    .top-bar img { width: 40px; height: 40px; }
+    .logout-btn {
+      background: white;
+      color: #006f45;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .edit-section {
+      margin-top: 2rem;
+      background: #ffffff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .edit-section input {
+      padding: 8px;
+      width: 100%;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .edit-section button {
+      background: #006f45;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div style="text-align: center; padding: 1rem; background-color: #fff;">
-    <span id="slogan">Connecting people through shared walks and hobbies</span><br>
-    <select class="language-select" onchange="changeLanguage(this.value)">
-      <option value="en">English</option>
-      <option value="pl">Polski</option>
-      <option value="no">Norsk</option>
-      <option value="da">Dansk</option>
-      <option value="de">Deutsch</option>
-      <option value="sv">Svenska</option>
-      <option value="cs">Čeština</option>
-    </select>
-  </div>
-
   <div class="top-bar">
     <img src="favicon.png" alt="Logo">
+    <div>Welcome to Walk College</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
+  <main style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <h2>Suggested walking buddies near you</h2>
+    <div id="user-list"></div>
 
-  <div class="hero">
-    <img src="walk_college_hero.png" alt="Hero Image">
-    <div class="overlay">
-      <h1>Walk College</h1>
-      <button onclick="showLogin()">Start Walking</button>
+    <div class="edit-section">
+      <h3>Edit Your Hobbies</h3>
+      <input id="hobbies" placeholder="Enter hobbies separated by comma (e.g. Forest walks, City strolls)" />
+      <button onclick="updateHobbies()">Update</button>
     </div>
-  </div>
-
-  <div class="side-images">
-    <img src="walkcollage.png" alt="Collage">
-    <img src="peoplewalk.png" alt="People walking">
-    <img src="forrest.png" alt="Forest">
-  </div>
-
-  <footer>
-    <button onclick="showModal('privacy')">Privacy Policy</button>
-    <button onclick="showModal('terms')">Terms of Use</button>
+  </main>
+  <footer style="text-align:center; padding:1rem; font-size:0.85rem; color:#aaa;">
+    © 2025 Walk College
   </footer>
-
-  <div id="modal" class="modal" onclick="this.style.display='none'">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <div id="modal-text"></div>
-    </div>
-  </div>
-
-  <script>
-    function changeLanguage(lang) {
-      const slogans = {
-        en: "Connecting people through shared walks and hobbies",
-        pl: "Łączymy ludzi przez wspólne spacery i hobby",
-        no: "Kobler folk gjennom felles turer og hobbyer",
-        da: "Forbinder folk gennem gåture og hobbyer",
-        de: "Menschen durch gemeinsame Spaziergänge und Hobbys verbinden",
-        sv: "Förenar människor genom promenader och intressen",
-        cs: "Spojujeme lidi skrze procházky a záliby"
-      };
-      document.getElementById("slogan").innerText = slogans[lang] || slogans.en;
-    }
-
-    function showModal(type) {
-      const content = {
-        privacy: `<h2>Privacy Policy – Walk College</h2>
-          <p>Walk College uses your personal data solely to enable Facebook login and to match users based on shared hobbies and location.</p>
-          <ul>
-            <li>Name (from your Facebook profile)</li>
-            <li>Profile picture</li>
-            <li>Selected hobbies</li>
-            <li>Device location (used to match users nearby)</li>
-          </ul>
-          <p>We do not share or sell your data to any third parties. All user data is stored securely using Firebase (Google Cloud services).</p>
-          <p>We do not respond to individual data requests. To stop using the app, simply uninstall it. Inactive user data is automatically cleaned up.</p>`,
-
-        terms: `<h2>Terms of Use – Walk College</h2>
-          <p>Welcome to Walk College!</p>
-          <p>By using this app, you agree to the following terms and conditions:</p>
-          <ol>
-            <li><strong>Purpose</strong> – This app helps users find walking buddies nearby with similar hobbies.</li>
-            <li><strong>Facebook Login</strong> – Your Facebook login info is used to identify you. Fake accounts are banned.</li>
-            <li><strong>Location & Hobbies</strong> – We use your device location and selected hobbies to suggest matches.</li>
-            <li><strong>Rules</strong> – Do not harass, spam or post offensive content. Violators may be banned.</li>
-          </ol>`
-      };
-      document.getElementById("modal-text").innerHTML = content[type];
-      document.getElementById("modal").style.display = 'flex';
-    }
-  </script>
 </body>
 </html>
