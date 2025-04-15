@@ -5,6 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Walk College</title>
   <link rel="icon" href="favicon.png" type="image/png">
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1226796702228224',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v19.0'
+      });
+    };
+
+    function showLogin() {
+      FB.login(function(response) {
+        if (response.authResponse) {
+          FB.api('/me', {fields: 'name,picture'}, function(userData) {
+            // Save user data to Firebase here (pseudo-code)
+            // firebase.firestore().collection("users").doc(response.authResponse.userID).set({
+            //   name: userData.name,
+            //   picture: userData.picture.data.url
+            // });
+            window.location.href = 'dashboard.html';
+          });
+        } else {
+          alert('Facebook login failed.');
+        }
+      }, {scope: 'public_profile,email'});
+    }
+  </script>
   <style>
     * {
       box-sizing: border-box;
@@ -142,10 +170,8 @@
   <div class="hero">
     <img src="walk_college_hero.png" alt="Hero Image">
     <div class="overlay">
-            <button onclick="showLogin()">Start Walking</button>
-      <div id="fb-login" style="margin-top: 1rem; display:none; color:white;">
-        <p>Redirecting to login...</p>
-      </div>
+      <h1>Walk College</h1>
+      <button onclick="showLogin()">Start Walking</button>
     </div>
   </div>
 
@@ -167,25 +193,6 @@
   </div>
 
   <script>
-    const slogans = {
-      en: "Connecting people through shared walks and hobbies",
-      pl: "Łączymy ludzi przez wspólne spacery i hobby",
-      no: "Kobler folk gjennom felles turer og hobbyer",
-      da: "Forbinder folk gennem gåture og hobbyer",
-      de: "Menschen durch gemeinsame Spaziergänge und Hobbys verbinden",
-      sv: "Förenar människor genom promenader och intressen",
-      cs: "Spojujeme lidi skrze procházky a záliby"
-    };
-
-    function changeLanguage(lang) {
-      document.getElementById('slogan').innerText = slogans[lang] || slogans.en;
-    }
-
-    function showLogin() {
-      document.getElementById('fb-login').style.display = 'block';
-      setTimeout(() => window.location.href = 'dashboard.html', 2000);
-    }
-
     function showModal(type) {
       const content = {
         privacy: `<h2>Privacy Policy – Walk College</h2>
