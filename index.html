@@ -1,293 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login | Walk College</title>
+  <title>Walk College</title>
+  <link rel="icon" href="/mnt/data/favicon.png" type="image/png">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #e6fff2, #ccf2e9), url('walkcollage.png') repeat;
-      background-size: 100px auto;
       margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-    }
-
-    .header-slider {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 10px;
-      animation: fadeIn 2s ease-in-out;
-      margin-left: 20px;
-    }
-
-    .header-slider img {
-      width: 150px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-      animation: fadeInSlide 0.5s ease-in-out;
-    }
-
-    .container {
-      text-align: center;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      z-index: 1;
-      margin-top: 20px;
-    }
-
-    img.logo {
-      width: 70px;
-      margin: 20px;
-      position: absolute;
-      top: 10px;
-      left: 10px;
-    }
-
-    h1 {
-      color: #007f5f;
-      margin-bottom: 10px;
-    }
-
-    #loginText {
-      font-size: 1.2em;
+      font-family: sans-serif;
+      background: url('/mnt/data/walkcollage.png') repeat;
       color: #333;
-      margin-bottom: 20px;
-      animation: fadeInText 2s ease-in-out;
     }
-
-    @keyframes fadeInText {
-      0% { opacity: 0; transform: translateY(-10px); }
-      100% { opacity: 1; transform: translateY(0); }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: rgba(255,255,255,0.8);
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    header img {
+      height: 40px;
     }
-
-    @keyframes fadeInSlide {
-      0% { opacity: 0; transform: scale(0.95); }
-      100% { opacity: 1; transform: scale(1); }
+    .language-select {
+      font-size: 1rem;
     }
-
-    #login-dropdown-btn {
-      background-color: #007f5f;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      font-size: 1em;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    #login-dropdown-btn:hover {
-      background-color: #005f47;
-    }
-
-    #login-options {
-      display: none;
-      margin-top: 10px;
-    }
-
-    .login-option {
-      background-color: #4267B2;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 5px;
-    }
-
-    .login-option:hover {
-      background-color: #365899;
-    }
-
-    select {
-      margin-top: 15px;
-      padding: 8px;
-      font-size: 1em;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    footer {
-      position: fixed;
-      bottom: 10px;
-      width: 100%;
+    .hero {
       text-align: center;
-      z-index: 2;
+      padding: 2rem 1rem;
+      background-color: rgba(255,255,255,0.9);
     }
-
-    footer button {
-      background-color: #007f5f;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      margin: 5px;
-      border-radius: 5px;
-      font-size: 0.9em;
-      cursor: pointer;
+    .hero img {
+      width: 100px;
+      margin-bottom: 1rem;
     }
-
-    footer button:hover {
-      background-color: #005f47;
+    .hero h1 {
+      font-size: 1.5rem;
     }
-
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 3;
-      left: 0;
-      top: 0;
+    .slideshow {
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+      position: relative;
+    }
+    .slideshow img {
       width: 100%;
       height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.5);
+      object-fit: cover;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s;
     }
-
-    .modal-content {
-      background-color: white;
-      margin: 10% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 90%;
-      max-width: 600px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
+    .slideshow img.active {
+      opacity: 1;
     }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
+    .login-card {
+      max-width: 400px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .login-card button {
+      padding: 0.75rem 1.5rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
       cursor: pointer;
+      font-size: 1rem;
+    }
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1rem;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
     }
   </style>
 </head>
-
 <body>
-  <img class="logo" src="walkcollage.png" alt="Walk College Logo">
-
-  <div class="header-slider">
-    <img src="forrest.png" alt="Forest Hike">
-    <img src="walk_college_hero.png" alt="Group Walk">
-  </div>
-
-  <div class="container">
-    <h1>Walk College</h1>
-    <p id="loginText">Login to connect with others and enjoy walking together!</p>
-    <button id="login-dropdown-btn" onclick="toggleLoginOptions()">Login</button>
-    <div id="login-options">
-      <button class="login-option" onclick="loginWithFacebook()">Facebook</button>
-    </div>
-    <br />
-    <select onchange="changeLanguage(this.value)">
-      <option value="en">English</option>
-      <option value="pl">Polski</option>
-      <option value="no">Norsk</option>
-      <option value="da">Dansk</option>
-      <option value="sv">Svenska</option>
-      <option value="de">Deutsch</option>
-      <option value="cs">Čeština</option>
+  <header>
+    <img src="/mnt/data/favicon.png" alt="Walk College Logo">
+    <select class="language-select" onchange="changeLanguage(this.value)">
+      <option value="en">EN</option>
+      <option value="pl">PL</option>
+      <option value="no">NO</option>
+      <option value="da">DA</option>
+      <option value="de">DE</option>
+      <option value="sv">SV</option>
+      <option value="cs">CS</option>
     </select>
+  </header>
+
+  <section class="hero">
+    <img src="/mnt/data/walk_college_hero.png" alt="Walk College Hero">
+    <h1 id="slogan">Connecting people through shared walks and hobbies</h1>
+  </section>
+
+  <div class="slideshow">
+    <img src="/mnt/data/peoplewalk.png" class="active">
+    <img src="/mnt/data/forrest.png">
+    <!-- Add more images if needed -->
   </div>
+
+  <section class="login-card">
+    <button onclick="showLogin()">Login with Facebook</button>
+    <div id="fb-login" style="margin-top: 1rem; display:none;">
+      <!-- Facebook login integration would go here -->
+      <p>Redirecting to Facebook login...</p>
+    </div>
+  </section>
 
   <footer>
-    <button onclick="openModal('privacyModal')">Privacy Policy</button>
-    <button onclick="openModal('termsModal')">Terms of Use</button>
+    <button onclick="showModal('privacy')">Privacy Policy</button>
+    <button onclick="showModal('terms')">Terms of Use</button>
   </footer>
 
-  <div id="privacyModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('privacyModal')">&times;</span>
-      <h2>Privacy Policy</h2>
-      <p>This app does not collect, store or share any personal information from users.</p>
-      <p>No accounts are required and all data remains on the user's device.</p>
-      <p>If you have questions, contact us at: <strong>wwalkcollege@gmail.com</strong></p>
+  <div id="modal" class="modal" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div id="modal-text"></div>
     </div>
   </div>
 
-  <div id="termsModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('termsModal')">&times;</span>
-      <h2>Terms of Use</h2>
-      <p>This app is provided "as is" without any guarantees.</p>
-      <p>The creator is not responsible for how users use the app or for any consequences of its use.</p>
-      <p>Use of this app is entirely at your own risk.</p>
-    </div>
-  </div>
-
-  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   <script>
-    window.fbAsyncInit = function () {
-      FB.init({
-        appId: '1226796702228224',
-        cookie: true,
-        xfbml: true,
-        version: 'v18.0'
-      });
-    };
-
-    function loginWithFacebook() {
-      FB.login(function (response) {
-        if (response.authResponse) {
-          window.location.href = "dashboard.html";
-        } else {
-          alert("Login was cancelled or failed.");
-        }
-      }, { scope: 'public_profile,email' });
-    }
-
-    function toggleLoginOptions() {
-      const options = document.getElementById("login-options");
-      options.style.display = options.style.display === "block" ? "none" : "block";
-    }
-
-    function openModal(id) {
-      document.getElementById(id).style.display = "block";
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).style.display = "none";
-    }
-
-    window.onclick = function (event) {
-      const modals = document.getElementsByClassName("modal");
-      for (let modal of modals) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      }
+    const slogans = {
+      en: "Connecting people through shared walks and hobbies",
+      pl: "Laczymy ludzi przez wspolne spacery i hobby",
+      no: "Kobler folk gjennom felles turer og hobbyer",
+      da: "Forbinder folk gennem gaature og hobbyer",
+      de: "Menschen durch gemeinsame Spaziergänge und Hobbys verbinden",
+      sv: "Förenar människor genom promenader och intressen",
+      cs: "Spojujeme lidi skrze procházky a záliby"
     };
 
     function changeLanguage(lang) {
-      const translations = {
-        en: "Login to connect with others and enjoy walking together!",
-        pl: "Zaloguj się, aby połączyć się z innymi i wspólnie spacerować!",
-        no: "Logg inn for å koble deg med andre og nyte turer sammen!",
-        da: "Log ind for at forbinde med andre og nyde gåture sammen!",
-        sv: "Logga in för att ansluta med andra och njuta av promenader tillsammans!",
-        de: "Melden Sie sich an, um sich mit anderen zu verbinden und gemeinsam spazieren zu gehen!",
-        cs: "Přihlaste se pro spojení s ostatními a užijte si společné procházky!"
+      document.getElementById('slogan').innerText = slogans[lang] || slogans.en;
+    }
+
+    function showLogin() {
+      document.getElementById('fb-login').style.display = 'block';
+      setTimeout(() => window.location.href = 'dashboard.html', 2000);
+    }
+
+    const slides = document.querySelectorAll(".slideshow img");
+    let current = 0;
+    setInterval(() => {
+      slides[current].classList.remove("active");
+      current = (current + 1) % slides.length;
+      slides[current].classList.add("active");
+    }, 5000);
+
+    function showModal(type) {
+      const content = {
+        privacy: `<h2>Privacy Policy</h2><p>Your privacy is important...</p>`,
+        terms: `<h2>Terms of Use</h2><p>By using Walk College, you agree...</p>`
       };
-      document.getElementById("loginText").innerText = translations[lang];
+      document.getElementById("modal-text").innerHTML = content[type];
+      document.getElementById("modal").style.display = 'flex';
     }
   </script>
 </body>
-
 </html>
