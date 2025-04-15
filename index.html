@@ -21,7 +21,7 @@
 
     .container {
       text-align: center;
-      background: white;
+      background: rgba(255, 255, 255, 0.6);
       padding: 40px;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -53,22 +53,29 @@
       background-color: #365899;
     }
 
+    select {
+      margin-top: 15px;
+      padding: 8px;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
     .slideshow {
       position: fixed;
-      bottom: 120px;
+      bottom: 140px;
       width: 90%;
       max-width: 900px;
-      height: auto;
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 15px;
       z-index: 0;
     }
 
     .slideshow img {
-      width: 30%;
+      width: 28%;
       height: auto;
-      max-height: 200px;
+      max-height: 160px;
       object-fit: cover;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -76,34 +83,16 @@
       animation: fade 30s infinite;
     }
 
-    .slideshow img:nth-child(1) {
-      animation-delay: 0s;
-    }
-
-    .slideshow img:nth-child(2) {
-      animation-delay: 10s;
-    }
-
-    .slideshow img:nth-child(3) {
-      animation-delay: 20s;
-    }
+    .slideshow img:nth-child(1) { animation-delay: 0s; }
+    .slideshow img:nth-child(2) { animation-delay: 10s; }
+    .slideshow img:nth-child(3) { animation-delay: 20s; }
 
     @keyframes fade {
-      0% {
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      30% {
-        opacity: 1;
-      }
-      40% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 0;
-      }
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      30% { opacity: 1; }
+      40% { opacity: 0; }
+      100% { opacity: 0; }
     }
 
     footer {
@@ -111,6 +100,7 @@
       bottom: 10px;
       width: 100%;
       text-align: center;
+      z-index: 2;
     }
 
     footer button {
@@ -127,6 +117,37 @@
     footer button:hover {
       background-color: #005f47;
     }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 3;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -134,8 +155,18 @@
   <div class="container">
     <img class="logo" src="walkcollage.png" alt="Walk College Logo">
     <h1>Walk College</h1>
-    <p>Login to connect with others and enjoy walking together!</p>
+    <p id="loginText">Login to connect with others and enjoy walking together!</p>
     <button id="fb-login-btn" onclick="loginWithFacebook()">Login with Facebook</button>
+    <br />
+    <select onchange="changeLanguage(this.value)">
+      <option value="en">English</option>
+      <option value="pl">Polski</option>
+      <option value="no">Norsk</option>
+      <option value="da">Dansk</option>
+      <option value="sv">Svenska</option>
+      <option value="de">Deutsch</option>
+      <option value="cs">Čeština</option>
+    </select>
   </div>
 
   <div class="slideshow">
@@ -145,12 +176,39 @@
   </div>
 
   <footer>
-    <button onclick="alert('Privacy Policy: This app does not collect any personal data.')">Privacy Policy</button>
-    <button onclick="alert('Terms of Use: Use this app at your own risk.')">Terms of Use</button>
+    <button onclick="openModal('privacyModal')">Privacy Policy</button>
+    <button onclick="openModal('termsModal')">Terms of Use</button>
   </footer>
 
-  <script async defer crossorigin="anonymous"
-    src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <div id="privacyModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('privacyModal')">&times;</span>
+      <h2>Privacy Policy – Walk College</h2>
+      <p>Walk College uses your personal data solely to enable Facebook login and to match users based on shared hobbies and location.</p>
+      <p><strong>Data collected:</strong><br/>
+        Name (from your Facebook profile)<br/>
+        Profile picture<br/>
+        Selected hobbies<br/>
+        Device location (used to match users nearby)</p>
+      <p>We do not share or sell your data to any third parties. All user data is stored securely using Firebase (Google Cloud services).</p>
+      <p>We do not respond to individual data requests. To stop using the app, simply uninstall it. Inactive user data is automatically cleaned up.</p>
+      <p><strong>Data Deletion Instructions:</strong><br/>
+        If you want your data deleted immediately, simply uninstall the app. Inactive accounts and their data are removed automatically after 90 days.</p>
+    </div>
+  </div>
+
+  <div id="termsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('termsModal')">&times;</span>
+      <h2>Terms of Use – Walk College</h2>
+      <p><strong>1. Purpose:</strong> Walk College is a mobile app that connects people with shared hobbies who are located near each other.</p>
+      <p><strong>2. Facebook Login & Account:</strong> The app uses Facebook login to authenticate users. Fake or impersonated accounts may result in a ban.</p>
+      <p><strong>3. Location & Hobby Matching:</strong> The app uses your device’s location and your selected hobbies to match you with nearby users who share similar interests.</p>
+      <p><strong>4. Acceptable Use:</strong> You agree not to harass others, upload offensive content, or misuse the app. Abuse may result in suspension.</p>
+    </div>
+  </div>
+
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   <script>
     window.fbAsyncInit = function () {
       FB.init({
@@ -169,6 +227,36 @@
           alert("Login was cancelled or failed.");
         }
       }, { scope: 'public_profile,email' });
+    }
+
+    function openModal(id) {
+      document.getElementById(id).style.display = "block";
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    window.onclick = function (event) {
+      const modals = document.getElementsByClassName("modal");
+      for (let modal of modals) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+    };
+
+    function changeLanguage(lang) {
+      const translations = {
+        en: "Login to connect with others and enjoy walking together!",
+        pl: "Zaloguj się, aby połączyć się z innymi i wspólnie spacerować!",
+        no: "Logg inn for å koble deg med andre og nyte turer sammen!",
+        da: "Log ind for at forbinde med andre og nyde gåture sammen!",
+        sv: "Logga in för att ansluta med andra och njuta av promenader tillsammans!",
+        de: "Melden Sie sich an, um sich mit anderen zu verbinden und gemeinsam spazieren zu gehen!",
+        cs: "Přihlaste se pro spojení s ostatními a užijte si společné procházky!"
+      };
+      document.getElementById("loginText").innerText = translations[lang];
     }
   </script>
 </body>
