@@ -4,8 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Walk College</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <title>Login | Walk College</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -15,249 +14,130 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: start;
-      min-height: 100vh;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    header {
+    .container {
       text-align: center;
-      padding: 30px 20px 10px;
-      animation: fadeIn 1.2s ease-in-out;
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1;
     }
 
-    header img {
-      max-width: 130px;
-      height: auto;
+    img.logo {
+      width: 100px;
+      margin-bottom: 20px;
     }
 
     h1 {
-      font-size: 2em;
       color: #007f5f;
-      margin: 10px 0;
+      margin-bottom: 10px;
     }
 
-    p {
-      color: #444;
-      font-size: 1.1em;
-      padding: 0 10px;
-    }
-
-    .buttons {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
-
-    button {
-      padding: 10px 20px;
-      border: none;
-      background-color: #007f5f;
+    #fb-login-btn {
+      background-color: #4267B2;
       color: white;
-      font-size: 1em;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #005f47;
-    }
-
-    select {
-      margin-top: 10px;
-      padding: 6px;
+      border: none;
+      padding: 12px 20px;
       font-size: 1em;
       border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
     }
 
-    .content img {
-      width: 90%;
-      max-width: 900px;
-      margin-top: 30px;
-      border-radius: 10px;
-      animation: zoomIn 1.2s ease;
+    #fb-login-btn:hover {
+      background-color: #365899;
     }
 
-    footer {
-      margin-top: auto;
-      padding: 20px;
-      text-align: center;
-      color: #777;
-      font-size: 0.9em;
-    }
-
-    .modal {
-      display: none;
+    .slideshow {
       position: fixed;
-      z-index: 1;
-      left: 0;
       top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+      overflow: hidden;
     }
 
-    .modal-content {
-      background-color: #fff;
-      margin: 10% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 90%;
-      max-width: 600px;
-      border-radius: 10px;
+    .slideshow img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: fade 30s infinite;
     }
 
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
+    .slideshow img:nth-child(1) {
+      animation-delay: 0s;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .slideshow img:nth-child(2) {
+      animation-delay: 10s;
     }
 
-    @keyframes zoomIn {
-      from {
-        transform: scale(0.9);
+    .slideshow img:nth-child(3) {
+      animation-delay: 20s;
+    }
+
+    @keyframes fade {
+      0% {
         opacity: 0;
       }
-
-      to {
-        transform: scale(1);
+      10% {
         opacity: 1;
       }
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5em;
+      30% {
+        opacity: 1;
       }
-
-      p {
-        font-size: 1em;
+      40% {
+        opacity: 0;
       }
-
-      button {
-        font-size: 0.9em;
-        padding: 8px 16px;
-      }
-
-      .modal-content {
-        width: 95%;
-        padding: 15px;
+      100% {
+        opacity: 0;
       }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <img src="walkcollage.png" alt="Walk College Logo" />
+  <div class="slideshow">
+    <img src="forrest.png" alt="People walking 1">
+    <img src="peoplewalk.png.png" alt="People walking 2">
+    <img src="walk_college_hero.png" alt="People walking 3">
+  </div>
+
+  <div class="container">
+    <img class="logo" src="walkcollage.png" alt="Walk College Logo">
     <h1>Walk College</h1>
-    <p id="tagline">Connecting people through shared walks and hobbies.</p>
-    <select onchange="changeLanguage(this.value)">
-      <option value="en">English</option>
-      <option value="pl">Polski</option>
-    </select>
-    <div class="buttons">
-      <button onclick="openModal('privacyModal')" id="privacyBtn">Privacy Policy</button>
-      <button onclick="openModal('termsModal')" id="termsBtn">Terms of Use</button>
-    </div>
-  </header>
-
-  <div class="content">
-    <img src="walk_college_hero.png" alt="Happy people walking" />
+    <p>Login to connect with others and enjoy walking together!</p>
+    <button id="fb-login-btn" onclick="loginWithFacebook()">Login with Facebook</button>
   </div>
 
-  <div id="privacyModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('privacyModal')">&times;</span>
-      <h2 id="privacyTitle">Privacy Policy</h2>
-      <p id="privacy1">This app does not collect, store or share any personal information from users.</p>
-      <p id="privacy2">No accounts are required and all data remains on the user's device.</p>
-      <p id="privacy3">If you have questions, contact us at: <strong>wwalkcollege@gmail.com</strong></p>
-    </div>
-  </div>
-
-  <div id="termsModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('termsModal')">&times;</span>
-      <h2 id="termsTitle">Terms of Use</h2>
-      <p id="terms1">This app is provided "as is" without any guarantees.</p>
-      <p id="terms2">The creator is not responsible for how users use the app or for any consequences of its use.</p>
-      <p id="terms3">Use of this app is entirely at your own risk.</p>
-    </div>
-  </div>
-
-  <footer>
-    &copy; 2025 Walk College. All rights reserved.
-  </footer>
-
+  <script async defer crossorigin="anonymous"
+    src="https://connect.facebook.net/en_US/sdk.js"></script>
   <script>
-    function openModal(id) {
-      document.getElementById(id).style.display = "block";
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).style.display = "none";
-    }
-
-    window.onclick = function (event) {
-      const modals = document.getElementsByClassName("modal");
-      for (let modal of modals) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      }
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: 'YOUR_APP_ID', // replace this with your actual App ID
+        cookie: true,
+        xfbml: true,
+        version: 'v18.0'
+      });
     };
 
-    function changeLanguage(lang) {
-      const text = {
-        en: {
-          tagline: "Connecting people through shared walks and hobbies.",
-          privacyBtn: "Privacy Policy",
-          termsBtn: "Terms of Use",
-          privacyTitle: "Privacy Policy",
-          privacy1: "This app does not collect, store or share any personal information from users.",
-          privacy2: "No accounts are required and all data remains on the user's device.",
-          privacy3: "If you have questions, contact us at: <strong>wwalkcollege@gmail.com</strong>",
-          termsTitle: "Terms of Use",
-          terms1: "This app is provided \"as is\" without any guarantees.",
-          terms2: "The creator is not responsible for how users use the app or for any consequences of its use.",
-          terms3: "Use of this app is entirely at your own risk."
-        },
-        pl: {
-          tagline: "Łączenie ludzi przez wspólne spacery i hobby.",
-          privacyBtn: "Polityka prywatności",
-          termsBtn: "Regulamin",
-          privacyTitle: "Polityka prywatności",
-          privacy1: "Aplikacja nie gromadzi, nie przechowuje ani nie udostępnia danych osobowych użytkowników.",
-          privacy2: "Konta nie są wymagane, a dane pozostają na urządzeniu użytkownika.",
-          privacy3: "W razie pytań napisz do nas: <strong>wwalkcollege@gmail.com</strong>",
-          termsTitle: "Regulamin",
-          terms1: "Aplikacja jest dostarczana w stanie \"takim, jakim jest\" bez żadnych gwarancji.",
-          terms2: "Twórca nie ponosi odpowiedzialności za sposób korzystania z aplikacji ani za jego skutki.",
-          terms3: "Używasz aplikacji na własne ryzyko."
+    function loginWithFacebook() {
+      FB.login(function (response) {
+        if (response.authResponse) {
+          window.location.href = "facebook-login-success.html";
+        } else {
+          alert("Login was cancelled or failed.");
         }
-      };
-
-      for (const id in text[lang]) {
-        document.getElementById(id).innerHTML = text[lang][id];
-      }
+      }, { scope: 'public_profile,email' });
     }
   </script>
 </body>
