@@ -29,10 +29,17 @@
       color: #333;
     }
     .nav a {
+      display: inline-block;
       text-decoration: none;
-      color: #25794b;
-      margin: 0 10px;
+      color: white;
+      background-color: #25794b;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 8px;
       font-weight: bold;
+    }
+    .nav a:hover {
+      background-color: #1d5e3b;
     }
     .content img {
       width: 80%;
@@ -49,6 +56,9 @@
       border-radius: 10px;
       text-align: left;
     }
+    .hidden {
+      display: none;
+    }
     footer {
       margin-top: 40px;
       padding: 20px;
@@ -63,8 +73,8 @@
     <h1>Walk College</h1>
     <p>Connecting people through shared walks and hobbies.</p>
     <div class="nav">
-      <a href="#privacy">Privacy Policy</a> |
-      <a href="#terms">Terms of Use</a>
+      <a href="#" onclick="showSection('privacy')">Privacy Policy</a>
+      <a href="#" onclick="showSection('terms')">Terms of Use</a>
     </div>
   </header>
 
@@ -72,14 +82,14 @@
     <img src="walk_college_hero.png" alt="Happy people walking" />
   </div>
 
-  <div id="privacy" class="section">
+  <div id="privacy" class="section hidden">
     <h2>Privacy Policy</h2>
     <p>This app does not collect, store or share any personal information from users.</p>
     <p>No accounts are required and all data remains on the user's device.</p>
     <p>If you have questions, contact us at: <strong>wwalkcollege@gmail.com</strong></p>
   </div>
 
-  <div id="terms" class="section">
+  <div id="terms" class="section hidden">
     <h2>Terms of Use</h2>
     <p>This app is provided "as is" without any guarantees.</p>
     <p>The creator is not responsible for how users use the app or for any consequences of its use.</p>
@@ -89,6 +99,14 @@
   <footer>
     &copy; 2025 Walk College. All rights reserved.
   </footer>
+
+  <script>
+    function showSection(id) {
+      document.getElementById("privacy").classList.add("hidden");
+      document.getElementById("terms").classList.add("hidden");
+      document.getElementById(id).classList.remove("hidden");
+    }
+  </script>
 
 </body>
 </html>
