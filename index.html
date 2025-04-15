@@ -7,32 +7,28 @@
   <link rel="icon" href="favicon.png" type="image/png">
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   <script>
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId      : '1226796702228224',
-        cookie     : true,
-        xfbml      : true,
-        version    : 'v19.0'
-      });
-    };
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1226796702228224',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v19.0'
+    });
+  };
 
-    function showLogin() {
-      FB.login(function(response) {
-        if (response.authResponse) {
-          FB.api('/me', {fields: 'name,picture'}, function(userData) {
-            // Save user data to Firebase here (pseudo-code)
-            // firebase.firestore().collection("users").doc(response.authResponse.userID).set({
-            //   name: userData.name,
-            //   picture: userData.picture.data.url
-            // });
-            window.location.href = 'dashboard.html';
-          });
-        } else {
-          alert('Facebook login failed.');
-        }
-      }, {scope: 'public_profile,email'});
-    }
-  </script>
+  function showLogin() {
+    FB.login(function(response) {
+      if (response.authResponse) {
+        FB.api('/me', {fields: 'name,email,picture'}, function(userData) {
+          // Save user data to Firebase here (pseudo-code)
+          window.location.href = 'dashboard.html';
+        });
+      } else {
+        alert('Facebook login failed.');
+      }
+    }, {scope: 'public_profile,email'});  // Zmieniono zakres o dostęp do e-maila
+  }
+</script>
   <style>
     * {
       box-sizing: border-box;
