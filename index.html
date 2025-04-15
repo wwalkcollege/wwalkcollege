@@ -57,8 +57,23 @@
       }, { scope: 'public_profile' });
     };
 
+    window.logout = function () {
+      FB.getLoginStatus(function (response) {
+        if (response.status === 'connected') {
+          FB.logout(function () {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+          });
+        } else {
+          sessionStorage.clear();
+          window.location.href = 'index.html';
+        }
+      });
+    };
+
     window.loadUsers = async function () {
       const container = document.getElementById("user-list");
+      container.innerHTML = '';
       const snapshot = await getDocs(collection(db, "users"));
       const userID = sessionStorage.getItem("userID");
 
@@ -89,14 +104,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', loadUsers);
-  </script>
-  <script>
-    function logout() {
-      FB.logout(function (response) {
-        sessionStorage.clear();
-        window.location.href = 'index.html';
-      });
-    }
   </script>
   <style>
     * { box-sizing: border-box; }
