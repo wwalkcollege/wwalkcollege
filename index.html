@@ -6,18 +6,27 @@
   <title>Walk College</title>
   <link rel="icon" href="/mnt/data/favicon.png" type="image/png">
   <style>
+    :root {
+      --primary-bg: #f4f4f9;
+      --primary-color: #2c3e50;
+      --accent-color: #3498db;
+      --card-bg: #ffffff;
+      --overlay: rgba(255,255,255,0.95);
+    }
     body {
       margin: 0;
-      font-family: sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background: url('/mnt/data/walkcollage.png') repeat;
-      color: #333;
+      background-color: var(--primary-bg);
+      color: var(--primary-color);
     }
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 1rem 2rem;
-      background-color: rgba(255,255,255,0.8);
+      background-color: var(--overlay);
+      border-bottom: 1px solid #ddd;
     }
     header img {
       height: 40px;
@@ -28,14 +37,14 @@
     .hero {
       text-align: center;
       padding: 2rem 1rem;
-      background-color: rgba(255,255,255,0.9);
+      background-color: var(--overlay);
     }
     .hero img {
       width: 100px;
       margin-bottom: 1rem;
     }
     .hero h1 {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
     }
     .slideshow {
       width: 100%;
@@ -58,15 +67,17 @@
       max-width: 400px;
       margin: 2rem auto;
       padding: 2rem;
-      background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
       text-align: center;
     }
     .login-card button {
       padding: 0.75rem 1.5rem;
-      background-color: #4CAF50;
+      background-color: var(--accent-color);
       color: white;
       border: none;
+      border-radius: 5px;
       cursor: pointer;
       font-size: 1rem;
     }
@@ -75,11 +86,12 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(255,255,255,0.9);
+      background: var(--overlay);
       display: flex;
       justify-content: center;
       gap: 2rem;
       padding: 1rem;
+      border-top: 1px solid #ddd;
     }
     .modal {
       position: fixed;
@@ -98,6 +110,7 @@
       max-width: 600px;
       max-height: 80vh;
       overflow-y: auto;
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -123,13 +136,11 @@
   <div class="slideshow">
     <img src="/mnt/data/peoplewalk.png" class="active">
     <img src="/mnt/data/forrest.png">
-    <!-- Add more images if needed -->
   </div>
 
   <section class="login-card">
     <button onclick="showLogin()">Login with Facebook</button>
     <div id="fb-login" style="margin-top: 1rem; display:none;">
-      <!-- Facebook login integration would go here -->
       <p>Redirecting to Facebook login...</p>
     </div>
   </section>
@@ -148,9 +159,9 @@
   <script>
     const slogans = {
       en: "Connecting people through shared walks and hobbies",
-      pl: "Laczymy ludzi przez wspolne spacery i hobby",
+      pl: "Łączymy ludzi przez wspólne spacery i hobby",
       no: "Kobler folk gjennom felles turer og hobbyer",
-      da: "Forbinder folk gennem gaature og hobbyer",
+      da: "Forbinder folk gennem gåture og hobbyer",
       de: "Menschen durch gemeinsame Spaziergänge und Hobbys verbinden",
       sv: "Förenar människor genom promenader och intressen",
       cs: "Spojujeme lidi skrze procházky a záliby"
