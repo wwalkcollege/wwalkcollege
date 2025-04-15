@@ -8,7 +8,7 @@
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDocs, collection, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
 
     const firebaseConfig = {
@@ -44,6 +44,7 @@
                 picture: userData.picture.data.url,
                 hobbies: ["Forest walks"]
               });
+              sessionStorage.setItem('userID', response.authResponse.userID);
               window.location.href = 'dashboard.html';
             } catch (e) {
               alert('Failed to save user data');
@@ -59,23 +60,40 @@
     window.loadUsers = async function () {
       const container = document.getElementById("user-list");
       const snapshot = await getDocs(collection(db, "users"));
-      snapshot.forEach(doc => {
-        const user = doc.data();
-        const div = document.createElement("div");
-        div.style = "background:white; padding:1rem; border-radius:8px; margin-bottom:1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05);";
-        div.innerHTML = `
-          <img src="${user.picture}" alt="${user.name}" style="width:40px; height:40px; border-radius:50%; vertical-align:middle; margin-right:10px;">
-          <strong>${user.name}</strong><br><span style="margin-left:50px">Hobbies: ${user.hobbies?.join(", ") || "Unknown"}</span>
-        `;
-        container.appendChild(div);
+      const userID = sessionStorage.getItem("userID");
+
+      const currentUserDoc = await getDoc(doc(db, "users", userID));
+      const currentUser = currentUserDoc.data();
+      const currentHobbies = currentUser?.hobbies || [];
+
+      snapshot.forEach(docSnap => {
+        const user = docSnap.data();
+        if (docSnap.id !== userID && user.hobbies?.some(hobby => currentHobbies.includes(hobby))) {
+          const div = document.createElement("div");
+          div.style = "background:white; padding:1rem; border-radius:8px; margin-bottom:1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05);";
+          div.innerHTML = `
+            <img src="${user.picture}" alt="${user.name}" style="width:40px; height:40px; border-radius:50%; vertical-align:middle; margin-right:10px;">
+            <strong>${user.name}</strong><br><span style="margin-left:50px">Hobbies: ${user.hobbies?.join(", ") || "Unknown"}</span>
+          `;
+          container.appendChild(div);
+        }
       });
     };
+
+    window.updateHobbies = async function () {
+      const userID = sessionStorage.getItem("userID");
+      const hobbiesInput = document.getElementById("hobbies").value.split(",").map(h => h.trim());
+      await updateDoc(doc(db, "users", userID), { hobbies: hobbiesInput });
+      alert("Hobbies updated successfully!");
+      location.reload();
+    }
 
     window.addEventListener('DOMContentLoaded', loadUsers);
   </script>
   <script>
     function logout() {
       FB.logout(function (response) {
+        sessionStorage.clear();
         window.location.href = 'index.html';
       });
     }
@@ -106,6 +124,28 @@
       cursor: pointer;
       font-weight: bold;
     }
+    .edit-section {
+      margin-top: 2rem;
+      background: #ffffff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .edit-section input {
+      padding: 8px;
+      width: 100%;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .edit-section button {
+      background: #006f45;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -117,6 +157,12 @@
   <main style="padding: 2rem; max-width: 800px; margin: 0 auto;">
     <h2>Suggested walking buddies near you</h2>
     <div id="user-list"></div>
+
+    <div class="edit-section">
+      <h3>Edit Your Hobbies</h3>
+      <input id="hobbies" placeholder="Enter hobbies separated by comma (e.g. Forest walks, City strolls)" />
+      <button onclick="updateHobbies()">Update</button>
+    </div>
   </main>
   <footer style="text-align:center; padding:1rem; font-size:0.85rem; color:#aaa;">
     © 2025 Walk College
