@@ -2,48 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Walk College</title>
+  <link rel="icon" href="favicon.png" />
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0fff4;
-      color: #333;
+      font-family: Arial, sans-serif;
+      background-color: #e6f5ec;
       margin: 0;
       padding: 0;
+      text-align: center;
     }
     header {
-      text-align: center;
-      padding: 30px;
-      background: #e6f5ec;
+      padding: 30px 10px 10px;
     }
     header img {
-      width: 120px;
+      width: 80px;
+      margin-bottom: 10px;
     }
     h1 {
-      color: #2a7a58;
+      color: #25794b;
+      font-size: 32px;
     }
-    .content {
-      text-align: center;
-      padding: 20px;
+    p {
+      font-size: 16px;
+      color: #333;
+    }
+    .nav a {
+      text-decoration: none;
+      color: #25794b;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+    .content img {
+      width: 80%;
+      max-width: 600px;
+      margin: 20px 0;
+      border-radius: 12px;
     }
     .section {
-      max-width: 800px;
-      margin: 40px auto;
+      background: #fff;
+      margin: 20px auto;
       padding: 20px;
-      background: #ffffff;
+      width: 90%;
+      max-width: 600px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      text-align: left;
     }
     footer {
-      text-align: center;
+      margin-top: 40px;
       padding: 20px;
-      font-size: 0.9em;
-      background: #e6f5ec;
-    }
-    a {
-      color: #2a7a58;
-      text-decoration: none;
-      font-weight: bold;
+      background-color: #d1eadc;
     }
   </style>
 </head>
@@ -53,14 +62,14 @@
     <img src="walkcollage.png" alt="Walk College Logo" />
     <h1>Walk College</h1>
     <p>Connecting people through shared walks and hobbies.</p>
-    <p>
+    <div class="nav">
       <a href="#privacy">Privacy Policy</a> |
       <a href="#terms">Terms of Use</a>
-    </p>
+    </div>
   </header>
 
   <div class="content">
-    <img src="hero.png" alt="Happy people walking" width="80%" />
+    <img src="walk_college_hero.png" alt="Happy people walking" />
   </div>
 
   <div id="privacy" class="section">
